@@ -1,19 +1,15 @@
 import React, { Component } from 'react'
-import { Button, Calendar } from 'antd'
+import { Card } from 'antd'
+import './index.css'
+import logo from '../../assets/logo.png'
 
-const onPanelChange = (value, mode) => {
-  console.log(value.format('YYYY-MM-DD'), mode);
-}
 export default class Login extends Component {
   render() {
     return (
-      <div>
-        <Button type="primary">Primary Button</Button>
-        <Button color="danger" variant="solid">
-            Solid
-          </Button>
-          <Calendar fullscreen={false} onPanelChange={onPanelChange} />
-        登录组件
+      <div className="login">
+        <Card className="login-container">
+          <img src={logo} alt="" className="login-logo" />
+        </Card>
       </div>
     )
   }
