@@ -10,7 +10,11 @@ export default class Login extends Component {
         <Card className="login-container">
           <img src={logo} alt="" className="login-logo" />
           {/* 表单 */}
-          <Form size="large">
+          <Form size="large" validateTrigger={['onChange', 'onBlur']} onFinish={this.onFinish} initialValues={{
+            mobile: '13911111111',
+            code: '246810',
+            agree: true
+          }}>
             <Form.Item
               name="mobile"
               rules={[
@@ -24,18 +28,21 @@ export default class Login extends Component {
                 }
               ]}
             >
-              <Input placeholder="请输入你的手机号" />
+              <Input placeholder="请输入你的手机号" autoComplete="off" />
             </Form.Item>
 
             <Form.Item name="code" rules={[
               { required: true, message: '验证码不能为空' },
               { pattern: /^\d{6}$/, message: '验证码格式错误' }
             ]}>
-              <Input placeholder="请输入验证码" />
+              <Input placeholder="请输入验证码" autoComplete="off" />
             </Form.Item>
 
             <Form.Item name="agree" rules={[
-              { required: true, message: '请阅读并同意用户协议' }
+              {
+                // 自定义校验规则
+                validator: (rule, value) => value ? Promise.resolve() : Promise.reject(new Error('请阅读并同意用户协议'))
+              }
             ]} valuePropName="checked">
               <Checkbox>我已阅读并同意[隐私条款]和[用户协议]</Checkbox>
             </Form.Item>
@@ -49,5 +56,9 @@ export default class Login extends Component {
         </Card>
       </div>
     )
+  }
+
+  onFinish = (values) => {
+    console.log(values)
   }
 }
