@@ -1,9 +1,20 @@
 import React, { Component } from 'react'
-import { Card, Button, Checkbox, Form, Input } from 'antd'
+import { Card, Button, Checkbox, Form, Input, message } from 'antd'
 import './index.scss'
 import logo from 'assets/logo.png'
+import { login } from 'api/user'
+import { useNavigate } from 'react-router-dom'
 
-export default class Login extends Component {
+// 自己实现 withRouter：在外层函数组件里用 Hook，再传给类组件
+const withRouter = (WrappedComponent) => (props) => {
+  const navigate = useNavigate()
+  return <WrappedComponent {...props} navigate={navigate} />
+}
+
+class Login extends Component {
+  state = {
+    loading: false // 加载状态
+  }
   render() {
     return (
       <div className="login">
@@ -48,7 +59,7 @@ export default class Login extends Component {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button type="primary" htmlType="submit" block loading={this.state.loading}>
                 登录
               </Button>
             </Form.Item>
@@ -58,7 +69,21 @@ export default class Login extends Component {
     )
   }
 
-  onFinish = (values) => {
-    console.log(values)
+  onFinish = async ({ mobile, code }) => {
+    this.setState({ loading: true })
+    try {
+      const res = await login(mobile, code)
+      // 登录成功，保存token
+      localStorage.setItem('token', res.data.token)
+      // 跳转到首页
+      this.props.navigate('/home')   // 通过 props 使用
+      // 提示消息
+      message.success('登录成功')
+    } catch (error) {
+      message.error(error.response.data.message)
+      this.setState({ loading: false })
+    }
   }
 }
+
+export default withRouter(Login)
