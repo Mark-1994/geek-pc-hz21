@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Button, Checkbox, Form, Input, message } from 'antd'
-import './index.scss'
+import styles from './index.module.scss'
 import logo from 'assets/logo.png'
 import { login } from 'api/user'
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +17,7 @@ class Login extends Component {
   }
   render() {
     return (
-      <div className="login">
+      <div className={styles.login}>
         <Card className="login-container">
           <img src={logo} alt="" className="login-logo" />
           {/* 表单 */}
