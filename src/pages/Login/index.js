@@ -4,6 +4,7 @@ import styles from './index.module.scss'
 import logo from 'assets/logo.png'
 import { login } from 'api/user'
 import { useNavigate } from 'react-router-dom'
+import { setToken } from 'utils/storage'
 
 // 自己实现 withRouter：在外层函数组件里用 Hook，再传给类组件
 const withRouter = (WrappedComponent) => (props) => {
@@ -74,7 +75,7 @@ class Login extends Component {
     try {
       const res = await login(mobile, code)
       // 登录成功，保存token
-      localStorage.setItem('token', res.data.token)
+      setToken(res.data.token)
       // 跳转到首页
       this.props.navigate('/home')   // 通过 props 使用
       // 提示消息

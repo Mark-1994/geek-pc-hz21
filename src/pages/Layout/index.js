@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import styles from './index.module.scss'
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Popconfirm, message } from 'antd'
 import { DiffOutlined, EditOutlined, HomeOutlined, LogoutOutlined } from '@ant-design/icons'
-import { Outlet, Link } from 'react-router-dom'
+import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { removeToken } from 'utils/storage'
+
+// 自己实现 withRouter：在外层函数组件里用 Hook，再传给类组件
+const withRouter = (WrappedComponent) => (props) => {
+  const navigate = useNavigate()
+  return <WrappedComponent {...props} navigate={navigate} />
+}
 
 const { Header, Content, Sider } = Layout
 const items2 = [
@@ -27,7 +34,7 @@ const items2 = [
   }
 })
 
-export default class LayoutComponent extends Component {
+class LayoutComponent extends Component {
   render() {
     return (
       <div className={styles.layout}>
@@ -37,7 +44,14 @@ export default class LayoutComponent extends Component {
             <div className="profile">
               <span>用户名</span>
               <span>
-                <LogoutOutlined /> 退出
+                <Popconfirm
+                  title="你确定要退出本系统吗？"
+                  okText="确定"
+                  cancelText="取消"
+                  onConfirm={this.onConfirm}
+                >
+                  <LogoutOutlined /> 退出
+                </Popconfirm>
               </span>
             </div>
           </Header>
@@ -61,4 +75,15 @@ export default class LayoutComponent extends Component {
       </div>
     )
   }
+  // 退出系统
+  onConfirm = () => {
+    // 移除token
+    removeToken()
+    // 跳转到登录页
+    this.props.navigate('/login')
+    // 提示消息
+    message.success('退出成功')
+  }
 }
+
+export default withRouter(LayoutComponent)
