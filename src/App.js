@@ -1,6 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Home from 'pages/Layout'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import Layout from 'pages/Layout'
 import Login from 'pages/Login'
+import Home from 'pages/Home'
+import ArticleList from 'pages/ArticleList'
+import ArticlePublish from 'pages/ArticlePublish'
 
 function App() {
   return (
@@ -8,9 +11,20 @@ function App() {
       <div className="App">
         {/* 配置路由的规则 */}
         <Routes>
-          <Route path="/home" element={<Home />}></Route>
+          {/* 一级路由，下面挂二级路由 */}
+          <Route path="/home" element={<Layout />}>
+            {/* index = 访问 /home 时默认显示 */}
+            <Route index element={<Home />}></Route>
+            {/* 注意写 "list" 不写 "/list"，会自动拼接成 /home/list */}
+            <Route path="list" element={<ArticleList />}></Route>
+            <Route path="publish" element={<ArticlePublish />}></Route>
+          </Route>
+          {/* 一级路由：登录页 */}
           <Route path="/login" element={<Login />}></Route>
+          {/* 根路径重定向 */}
+          <Route path="/" element={<Navigate to="/home" />}></Route>
           {/* 配置一个404组件 */}
+          <Route path="*" element={<div>404 页面不存在</div>}></Route>
         </Routes>
       </div>
     </Router>

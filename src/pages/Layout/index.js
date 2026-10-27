@@ -2,20 +2,21 @@ import React, { Component } from 'react'
 import styles from './index.module.scss'
 import { Layout, Menu } from 'antd'
 import { DiffOutlined, EditOutlined, HomeOutlined, LogoutOutlined } from '@ant-design/icons'
+import { Outlet, Link } from 'react-router-dom'
 
 const { Header, Content, Sider } = Layout
 const items2 = [
   {
     icon: HomeOutlined,
-    label: '数据概览'
+    label: <Link to="/home">数据概览</Link>
   },
   {
     icon: DiffOutlined,
-    label: '内容管理'
+    label: <Link to="/home/list">内容管理</Link>
   },
   {
     icon: EditOutlined,
-    label: '发布文章'
+    label: <Link to="/home/publish">发布文章</Link>
   }
 ].map(({ icon, label }, index) => {
   const key = String(index + 1)
@@ -52,7 +53,7 @@ export default class LayoutComponent extends Component {
             </Sider>
             <Layout style={{ padding: '24px' }}>
               <Content className="site-layout-background">
-                Content
+                <Outlet />
               </Content>
             </Layout>
           </Layout>
