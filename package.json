@@ -2,7 +2,6 @@
   "name": "geek-pc-hz21",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://geek.itheima.net/v1_0/",
   "dependencies": {
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.10.0",

@@ -4,6 +4,7 @@ import { Layout, Menu, Popconfirm, message } from 'antd'
 import { DiffOutlined, EditOutlined, HomeOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Outlet, Link, useNavigate } from 'react-router-dom'
 import { removeToken } from 'utils/storage'
+import { getUserProfile } from 'api/user'
 
 // 自己实现 withRouter：在外层函数组件里用 Hook，再传给类组件
 const withRouter = (WrappedComponent) => (props) => {
@@ -35,6 +36,9 @@ const items2 = [
 })
 
 class LayoutComponent extends Component {
+  state = {
+    profile: {}
+  }
   render() {
     return (
       <div className={styles.layout}>
@@ -42,7 +46,7 @@ class LayoutComponent extends Component {
           <Header style={{ display: 'flex', alignItems: 'center' }}>
             <div className="demo-logo" />
             <div className="profile">
-              <span>用户名</span>
+              <span>{this.state.profile.name}</span>
               <span>
                 <Popconfirm
                   title="你确定要退出本系统吗？"
@@ -74,6 +78,12 @@ class LayoutComponent extends Component {
         </Layout>
       </div>
     )
+  }
+  async componentDidMount() {
+    const res = await getUserProfile()
+    this.setState({
+      profile: res.data
+    })
   }
   // 退出系统
   onConfirm = () => {
