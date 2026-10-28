@@ -3,13 +3,14 @@ import { Card, Button, Checkbox, Form, Input, message } from 'antd'
 import styles from './index.module.scss'
 import logo from 'assets/logo.png'
 import { login } from 'api/user'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { setToken } from 'utils/storage'
 
 // 自己实现 withRouter：在外层函数组件里用 Hook，再传给类组件
 const withRouter = (WrappedComponent) => (props) => {
   const navigate = useNavigate()
-  return <WrappedComponent {...props} navigate={navigate} />
+  const location = useLocation()
+  return <WrappedComponent {...props} navigate={navigate} location={location} />
 }
 
 class Login extends Component {
@@ -77,7 +78,9 @@ class Login extends Component {
       // 登录成功，保存token
       setToken(res.data.token)
       // 跳转到首页
-      this.props.navigate('/home')   // 通过 props 使用
+      // 关键：获取重定向过来时保存的原路径，如果没有，默认去首页
+      const from = this.props.location.state?.from || '/home'
+      this.props.navigate(from)   // 通过 props 使用
       // 提示消息
       message.success('登录成功')
     } catch (error) {

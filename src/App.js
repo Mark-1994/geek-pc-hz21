@@ -4,6 +4,7 @@ import Login from 'pages/Login'
 import Home from 'pages/Home'
 import ArticleList from 'pages/ArticleList'
 import ArticlePublish from 'pages/ArticlePublish'
+import AuthRoute from 'components/AuthRoute'
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         {/* 配置路由的规则 */}
         <Routes>
           {/* 一级路由，下面挂二级路由 */}
-          <Route path="/home" element={<Layout />}>
+          <Route path="/home" element={<AuthRoute><Layout /></AuthRoute>}>
             {/* index = 访问 /home 时默认显示 */}
             <Route index element={<Home />}></Route>
             {/* 注意写 "list" 不写 "/list"，会自动拼接成 /home/list */}
