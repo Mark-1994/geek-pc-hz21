@@ -1,14 +1,28 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom'
 import Layout from 'pages/Layout'
 import Login from 'pages/Login'
 import Home from 'pages/Home'
 import ArticleList from 'pages/ArticleList'
 import ArticlePublish from 'pages/ArticlePublish'
 import AuthRoute from 'components/AuthRoute'
+import { setNavigate } from 'utils/router'
+
+// 必须放在 <Router> 内部，否则 useNavigate 拿不到 Router 的 context
+function RegisterNavigate() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setNavigate(navigate)
+  }, [navigate])
+
+  return null
+}
 
 function App() {
   return (
     <Router>
+      <RegisterNavigate />
       <div className="App">
         {/* 配置路由的规则 */}
         <Routes>
