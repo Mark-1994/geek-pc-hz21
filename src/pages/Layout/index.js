@@ -72,7 +72,7 @@ class LayoutComponent extends Component {
                 items={items2}
               />
             </Sider>
-            <Layout style={{ padding: '24px' }}>
+            <Layout style={{ padding: '24px', overflow: 'auto' }}>
               <Content className="site-layout-background">
                 <Outlet />
               </Content>
