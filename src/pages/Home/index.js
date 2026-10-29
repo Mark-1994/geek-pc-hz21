@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
+import styles from './index.module.scss'
 
 export default class Home extends Component {
   render() {
     return (
-      <div>首页</div>
+      <div className={styles.home}></div>
     )
   }
 }
