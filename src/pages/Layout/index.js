@@ -2,34 +2,37 @@ import React, { Component } from 'react'
 import styles from './index.module.scss'
 import { Layout, Menu, Popconfirm, message } from 'antd'
 import { DiffOutlined, EditOutlined, HomeOutlined, LogoutOutlined } from '@ant-design/icons'
-import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 import { removeToken } from 'utils/storage'
 import { getUserProfile } from 'api/user'
 
 // 自己实现 withRouter：在外层函数组件里用 Hook，再传给类组件
 const withRouter = (WrappedComponent) => (props) => {
   const navigate = useNavigate()
-  return <WrappedComponent {...props} navigate={navigate} />
+  const location = useLocation()
+  return <WrappedComponent {...props} navigate={navigate} location={location} />
 }
 
 const { Header, Content, Sider } = Layout
 const items2 = [
   {
     icon: HomeOutlined,
-    label: <Link to="/home">数据概览</Link>
+    label: <Link to="/home">数据概览</Link>,
+    key: '/home'
   },
   {
     icon: DiffOutlined,
-    label: <Link to="/home/list">内容管理</Link>
+    label: <Link to="/home/list">内容管理</Link>,
+    key: '/home/list'
   },
   {
     icon: EditOutlined,
-    label: <Link to="/home/publish">发布文章</Link>
+    label: <Link to="/home/publish">发布文章</Link>,
+    key: '/home/publish'
   }
-].map(({ icon, label }, index) => {
-  const key = String(index + 1)
+].map(({ icon, label, key }) => {
   return {
-    key: key,
+    key,
     icon: React.createElement(icon),
     label: label
   }
@@ -64,7 +67,7 @@ class LayoutComponent extends Component {
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={['1']}
+                defaultSelectedKeys={[this.props.location.pathname]}
                 style={{ height: '100%', borderInlineEnd: 0 }}
                 items={items2}
               />
@@ -80,10 +83,12 @@ class LayoutComponent extends Component {
     )
   }
   async componentDidMount() {
-    const res = await getUserProfile()
-    this.setState({
-      profile: res.data
-    })
+    try {
+      const res = await getUserProfile()
+      this.setState({
+        profile: res.data
+      })
+    } catch (err) {}
   }
   // 退出系统
   onConfirm = () => {
