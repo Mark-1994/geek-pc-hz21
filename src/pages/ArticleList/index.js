@@ -58,13 +58,16 @@ export default class ArticleList extends Component {
       }
     }
   ]
+  // 用于存放查询文章列表的所有的参数
+  reqParams = { page: 1, per_page: 10 }
+  // 跟渲染无关的没必要放在state中
   state = {
     // 频道列表数据
     channels: [],
     articles: {}
   }
   render() {
-    const { total_count, results } = this.state.articles
+    const { total_count, results, per_page, page } = this.state.articles
     return (
       <div>
         <Card title={
@@ -104,13 +107,18 @@ export default class ArticleList extends Component {
           </Form>
         </Card>
         <Card title={`根据筛选条件共查询到 ${total_count} 条结果：`}>
-          <Table columns={this.columns} dataSource={results} rowKey="id" />
+          <Table columns={this.columns} dataSource={results} rowKey="id" pagination={{ placement: ['bottomCenter'], total: total_count, pageSize: per_page, current: page, onChange: this.onChange }} />
         </Card>
       </div>
     )
   }
   async componentDidMount() {
     this.getChannelList()
+    this.getArticleList()
+  }
+  onChange = (page, pageSize) => {
+    this.reqParams.page = page
+    this.reqParams.per_page = pageSize
     this.getArticleList()
   }
   getChannelList = async () => {
@@ -120,12 +128,30 @@ export default class ArticleList extends Component {
     })
   }
   getArticleList = async () => {
-    const res = await getArticles()
+    const res = await getArticles(this.reqParams)
     this.setState({
       articles: res.data
     })
   }
-  onFinish = (values) => {
-    console.log(values)
+  onFinish = ({ status, channel_id, date }) => {
+    if (status !== -1) {
+      this.reqParams.status = status
+    } else {
+      delete this.reqParams.status
+    }
+    if (channel_id !== undefined) {
+      this.reqParams.channel_id = channel_id
+    } else {
+      delete this.reqParams.channel_id
+    }
+    if (date) {
+      this.reqParams.begin_pubdate = date[0].startOf('day').format('YYYY-MM-DD HH:mm:ss')
+      this.reqParams.end_pubdate = date[1].endOf('day').format('YYYY-MM-DD HH:mm:ss')
+    } else {
+      delete this.reqParams.begin_pubdate
+      delete this.reqParams.end_pubdate
+    }
+    this.reqParams.page = 1
+    this.getArticleList()
   }
 }
