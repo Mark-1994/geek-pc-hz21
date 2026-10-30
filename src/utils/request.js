@@ -19,6 +19,10 @@ instance.interceptors.request.use(config => {
 
 // 配置响应拦截器
 instance.interceptors.response.use(response => response.data, error => {
+  if (!error.response) {
+    message.error('网络繁忙，请稍后重试')
+    return Promise.reject(error)
+  }
   if (error.response.status === 401) {
     removeToken()
     message.error('登录状态已过期，请重新登录')
