@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Card, Breadcrumb, Form, Radio, Button, Select, DatePicker, Table, Tag, Space } from 'antd'
+import { Card, Breadcrumb, Form, Radio, Button, Select, DatePicker, Table, Tag, Space, message, Modal } from 'antd'
 import { Link } from 'react-router-dom'
 import { ArticleStatus } from 'api/constants'
 import { getChannels } from 'api/channel'
-import { getArticles } from 'api/article'
+import { getArticles, deleteArticle } from 'api/article'
 import defaultImg from 'assets/error.png'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 export default class ArticleList extends Component {
   columns = [
@@ -48,11 +48,11 @@ export default class ArticleList extends Component {
     },
     {
       title: '操作',
-      render: () => {
+      render: (data) => {
         return (
           <Space>
             <Button type="primary" shape="circle" icon={<EditOutlined />}></Button>
-            <Button danger shape="circle" icon={<DeleteOutlined />}></Button>
+            <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => this.handleDelete(data.id)}></Button>
           </Space>
         )
       }
@@ -115,6 +115,18 @@ export default class ArticleList extends Component {
   async componentDidMount() {
     this.getChannelList()
     this.getArticleList()
+  }
+  handleDelete = async (id) => {
+    Modal.confirm({
+      title: '温馨提示',
+      icon: <ExclamationCircleOutlined />,
+      content: '是否确定删除此文章?',
+      onOk: async () => {
+        await deleteArticle(id)
+        message.success('删除成功')
+        this.getArticleList()
+      }
+    })
   }
   onChange = (page, pageSize) => {
     this.reqParams.page = page

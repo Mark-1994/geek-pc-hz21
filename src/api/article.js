@@ -7,3 +7,10 @@ import request from 'utils/request'
  * @returns 
  */
 export const getArticles = (params) => request.get('/mp/articles', { params })
+
+/**
+ * 删除文章
+ * @param {*} id 
+ * @returns 
+ */
+export const deleteArticle = (id) => request.delete(`/mp/articles/${id}`)
