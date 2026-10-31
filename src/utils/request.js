@@ -3,9 +3,10 @@ import { getToken, hasToken, removeToken } from 'utils/storage'
 import { message } from 'antd'
 import { navigateTo } from 'utils/router'
 
+export const baseURL = 'https://geek.itheima.net/v1_0'
 // 创建axios实例
 const instance = axios.create({
-  baseURL: 'https://geek.itheima.net/v1_0/',
+  baseURL,
   timeout: 5000
 })
 

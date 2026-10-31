@@ -14,3 +14,10 @@ export const getArticles = (params) => request.get('/mp/articles', { params })
  * @returns 
  */
 export const deleteArticle = (id) => request.delete(`/mp/articles/${id}`)
+
+/**
+ * 新增文章
+ * @param {*} data 
+ * @returns 
+ */
+export const addArticle = (data, draft = false) => request.post(`/mp/articles?draft=${draft}`, data)
