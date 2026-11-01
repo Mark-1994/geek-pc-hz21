@@ -21,3 +21,20 @@ export const deleteArticle = (id) => request.delete(`/mp/articles/${id}`)
  * @returns 
  */
 export const addArticle = (data, draft = false) => request.post(`/mp/articles?draft=${draft}`, data)
+
+/**
+ * 获取文章详情信息
+ * @param {*} id 
+ * @returns 
+ */
+export const getArticleById = (id) => {
+  return request.get(`/mp/articles/${id}`)
+}
+
+/**
+ * 修改文章的接口
+ * @param {*} data 
+ * @param {*} draft 
+ * @returns 
+ */
+export const updateArticle = (data, draft = false) => request.put(`/mp/articles/${data.id}?draft=${draft}`, data)

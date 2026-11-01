@@ -40,7 +40,8 @@ const items2 = [
 
 class LayoutComponent extends Component {
   state = {
-    profile: {}
+    profile: {},
+    selectedKey: this.props.location.pathname
   }
   render() {
     return (
@@ -67,7 +68,7 @@ class LayoutComponent extends Component {
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={[this.props.location.pathname]}
+                selectedKeys={[this.state.selectedKey]}
                 style={{ height: '100%', borderInlineEnd: 0 }}
                 items={items2}
               />
@@ -81,6 +82,21 @@ class LayoutComponent extends Component {
         </Layout>
       </div>
     )
+  }
+  // 监听路由变化，更新selectedKey
+  // prevProps: 上一个路由对象
+  componentDidUpdate(prevProps) {
+    // 判断路由是否变化
+    let pathname = this.props.location.pathname
+    if (this.props.location.pathname !== prevProps.location.pathname) {
+      // 考虑修改文章的情况
+      if (pathname.startsWith('/home/publish')) {
+        pathname = '/home/publish'
+      }
+      this.setState({
+        selectedKey: pathname,
+      })
+    }
   }
   async componentDidMount() {
     try {

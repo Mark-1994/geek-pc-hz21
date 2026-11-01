@@ -32,7 +32,9 @@ function App() {
             <Route index element={<Home />}></Route>
             {/* 注意写 "list" 不写 "/list"，会自动拼接成 /home/list */}
             <Route path="list" element={<ArticleList />}></Route>
-            <Route path="publish" element={<ArticlePublish />}></Route>
+            <Route path="publish" element={<ArticlePublish key="add" />}></Route>
+            {/* 修改页面路径，添加 :id */}
+            <Route path="publish/:id" element={<ArticlePublish key="edit" />}></Route>
           </Route>
           {/* 一级路由：登录页 */}
           <Route path="/login" element={<Login />}></Route>

@@ -1,23 +1,32 @@
 import React, { Component } from 'react'
 import { Card, Breadcrumb, Form, Button, Space, Input, Radio, Upload, Modal, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Channel from 'components/Channel'
 import ReactQuill from 'react-quill-new'
 import 'react-quill-new/dist/quill.snow.css'
 import styles from './index.module.scss'
 import { PlusOutlined } from '@ant-design/icons'
 import { baseURL } from 'utils/request'
-import { addArticle } from 'api/article'
+import { addArticle, getArticleById, updateArticle } from 'api/article'
 import { navigateTo } from 'utils/router'
 
-export default class ArticlePublish extends Component {
+export function withParams(Component) {
+  return function Wrapper(props) {
+    const params = useParams()
+    return <Component {...props} params={params} />
+  }
+}
+
+class ArticlePublish extends Component {
   state = {
     // 文章的封面类型
     type: 1,
     // 用于控制上传的图片以及图片的显示
     fileList: [],
     showPreview: false,
-    previewUrl: ''
+    previewUrl: '',
+    // 编辑文章的id
+    id: this.props.params.id
   }
   formRef = React.createRef()
   render() {
@@ -30,7 +39,7 @@ export default class ArticlePublish extends Component {
                 title: <Link to="/home">首页</Link>,
               },
               {
-                title: '发布文章',
+                title: this.state.id ? '编辑文章' : '发布文章',
               },
             ]}
           />
@@ -82,7 +91,7 @@ export default class ArticlePublish extends Component {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 4 }}>
               <Space>
-                <Button type="primary" htmlType="submit" size="large">发布文章</Button>
+                <Button type="primary" htmlType="submit" size="large">{ this.state.id ? '编辑文章' : '发布文章' }</Button>
                 <Button size="large" onClick={this.addDraft}>存入草稿</Button>
               </Space>
             </Form.Item>
@@ -94,6 +103,20 @@ export default class ArticlePublish extends Component {
         </Modal>
       </div>
     )
+  }
+  async componentDidMount() {
+    if (this.state.id) {
+      const res = await getArticleById(this.state.id)
+      const values = {
+        ...res.data,
+        type: res.data.cover.type
+      }
+      this.formRef.current.setFieldsValue(values)
+      this.setState({
+        fileList: res.data.cover.images.map(url => ({ url })),
+        type: res.data.cover.type
+      })
+    }
   }
   // 上传前的校验
   beforeUpload = (file) => {
@@ -128,11 +151,20 @@ export default class ArticlePublish extends Component {
     const { fileList, type } = this.state
     if (fileList.length !== type) return message.warning('上传图片的数量不正确')
     const images = fileList.map(file => file.url || file.response.data.url)
-    await addArticle({
-      ...values,
-      cover: { type, images }
-    }, draft)
-    message.success('添加文章成功')
+    if (this.state.id) {
+      await updateArticle({
+        ...values,
+        cover: { type, images },
+        id: this.state.id
+      }, draft)
+      message.success('修改文章成功')
+    } else {
+      await addArticle({
+        ...values,
+        cover: { type, images }
+      }, draft)
+      message.success('添加文章成功')
+    }
     navigateTo('/home/list')
   }
   onFinish = async (values) => {
@@ -145,3 +177,5 @@ export default class ArticlePublish extends Component {
     } catch (error) {}
   }
 }
+
+export default withParams(ArticlePublish)

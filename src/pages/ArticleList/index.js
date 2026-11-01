@@ -6,6 +6,7 @@ import { getChannels } from 'api/channel'
 import { getArticles, deleteArticle } from 'api/article'
 import defaultImg from 'assets/error.png'
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { navigateTo } from 'utils/router'
 
 export default class ArticleList extends Component {
   columns = [
@@ -51,7 +52,7 @@ export default class ArticleList extends Component {
       render: (data) => {
         return (
           <Space>
-            <Button type="primary" shape="circle" icon={<EditOutlined />}></Button>
+            <Button type="primary" shape="circle" icon={<EditOutlined />} onClick={() => this.handleEdit(data.id)}></Button>
             <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => this.handleDelete(data.id)}></Button>
           </Space>
         )
@@ -115,6 +116,9 @@ export default class ArticleList extends Component {
   async componentDidMount() {
     this.getChannelList()
     this.getArticleList()
+  }
+  handleEdit = (id) => {
+    navigateTo(`/home/publish/${id}`)
   }
   handleDelete = async (id) => {
     Modal.confirm({
