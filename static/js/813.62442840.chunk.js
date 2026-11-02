@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkgeek_pc_hz21||=[]).push([[813],{2813(e,s,a){a.r(s),a.d(s,{default:()=>c});var r=a(5043);const n="Home_home__7fLsL";var t=a(579);class c extends r.Component{render(){return(0,t.jsx)("div",{className:n})}}}}]);
+//# sourceMappingURL=813.62442840.chunk.js.map

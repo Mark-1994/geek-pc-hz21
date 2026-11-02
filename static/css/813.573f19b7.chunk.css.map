@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/813.a1d222f4.chunk.css","mappings":"AAAA,kBAGE,gFADA,YADA,UAEA","sources":["pages/Home/index.module.scss"],"sourcesContent":[".home {\n  width: 100%;\n  height: 100%;\n  background-image: url('~assets/chart.png');\n}\n"],"names":[],"sourceRoot":""}
