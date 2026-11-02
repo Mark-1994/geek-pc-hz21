@@ -3,6 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches: [ main ] # 触发分支，根据你的主分支名称调整（如 master）
+  workflow_dispatch: # 允许手动点击运行
 
 permissions:
   contents: write # 授予 Action 推送代码到仓库的权限
